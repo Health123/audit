@@ -1,0 +1,13 @@
+== Audit
+
+A simple audit solution for Rails.
+
+== Installation
+
+Run into console
+  rails g audit:install
+
+== Using
+  class Secret < ActiveRecord::Base
+    acts_as_auditable
+  end
