@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120413134209) do
+ActiveRecord::Schema.define(:version => 20120414195120) do
 
   create_table "audit_logs", :force => true do |t|
     t.integer  "auditable_id"
@@ -27,6 +27,13 @@ ActiveRecord::Schema.define(:version => 20120413134209) do
   add_index "audit_logs", ["auditable_id", "auditable_type"], :name => "auditable_index"
   add_index "audit_logs", ["created_at"], :name => "index_audit_logs_on_created_at"
   add_index "audit_logs", ["user_id", "user_type"], :name => "user_index"
+
+  create_table "secret2s", :force => true do |t|
+    t.integer  "user_id"
+    t.text     "data"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "secrets", :force => true do |t|
     t.string   "data"

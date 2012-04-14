@@ -7,4 +7,9 @@ FactoryGirl.define do
     data { FactoryGirl.generate(:data) }
     user { |a| a.association(:user) }
   end
+  
+  factory :secret2 do
+    data { FactoryGirl.generate(:data) }
+    user { |a| a.association(:user) }
+  end
 end

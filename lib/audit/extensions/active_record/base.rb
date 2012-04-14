@@ -15,7 +15,7 @@ module Audit
         unless self.class.audit_config[:except].to_s == 'owner' and 
           self.class.audit_config[:owner].present? and
           self.respond_to?(self.class.audit_config[:owner]) and
-          self.call(self.class.audit_config[:owner]) == user
+          self.send(self.class.audit_config[:owner]) == user
         
           self.audit_logs.create({
             user: user,
