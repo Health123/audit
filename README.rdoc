@@ -11,3 +11,7 @@ Run into console
   class Secret < ActiveRecord::Base
     acts_as_auditable
   end
+
+  class Secret < ActiveRecord::Base
+    acts_as_auditable(except: :owner, owner: :user) 
+  end
