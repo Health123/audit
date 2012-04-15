@@ -3,8 +3,9 @@ require 'spec_helper'
 describe Audit::AuditLog do
   
   let(:user)    { create(:user) }
+  let(:user2)   { create(:user) }
   let(:secret)  { create(:secret) }
-  let(:secret2)  { create(:secret2, user: user) }
+  let(:secret2) { create(:secret2, user: user) }
   let(:log)     { secret.audit_logs.last }
   
   def self.should_create_with_correct_data
@@ -32,6 +33,12 @@ describe Audit::AuditLog do
     
     it "should not create AuditLog" do
       expect { secret2 }.to_not change(Audit::AuditLog, :count).by(1)
+    end
+    
+    it "should create AuditLog if not owner" do
+      secret2
+      Audit.current_user = user2
+      expect { Secret2.find(secret2.id) }.to change(Audit::AuditLog, :count).by(1)
     end
   end  
   
