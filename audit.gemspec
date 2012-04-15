@@ -8,7 +8,9 @@ Gem::Specification.new do |s|
   s.description = "Simple audit system."
   s.version     = Audit::VERSION.dup
   s.platform    = Gem::Platform::RUBY
-  s.homepage    = "http://github.com/sparrow/audit"
+  s.authors     = ["Vladimir Vorobyov"]
+  s.email       = ["sparrowpublic@gmail.com"]
+  s.homepage    = "https://github.com/sparrow/audit"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec}/*`.split("\n")
