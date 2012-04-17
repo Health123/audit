@@ -16,6 +16,10 @@ class CreateAuditTables < ActiveRecord::Migration
   end
 
   def down
+    remove_index :audit_logs, :name => 'auditable_index'
+    remove_index :audit_logs, :name => 'user_index'
+    remove_index :audit_logs, :column => :created_at
+    
     drop_table :audit_logs
   end
 end
