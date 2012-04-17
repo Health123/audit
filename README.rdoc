@@ -12,6 +12,14 @@ Run into console
     acts_as_auditable
   end
 
+== If you want to audit all except owner activity
   class Secret < ActiveRecord::Base
     acts_as_auditable(except: :owner, owner: :user) 
   end
+
+== How to set current user
+By default, Audit try to call current_user method into controller, if you have another method for current user you need to create file config/initializers/audit.rb with code:
+  Audit.setup do |config|
+    config.current_user_method = :audit_user
+  end
+:audit_user - name of a method that returns the current user

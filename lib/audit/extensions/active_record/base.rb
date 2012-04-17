@@ -1,45 +1,42 @@
 module Audit
-  module ActiveRecord
-
-    def self.included(base)
-      unless base.included_modules.include?(InstanceMethods)
-        base.extend ClassMethods
-      end
+  module ActsAsAuditable
+    extend ActiveSupport::Concern
+    
+    included do
     end
-
-    module InstanceMethods
-      def audit(action)
-        user  = Audit.current_user
-        ip    = Audit.current_user_ip
+    
+    def audit(action)
+      user  = Audit.current_user
+      ip    = Audit.current_user_ip
         
-        unless self.class.audit_config[:except].to_s == 'owner' and 
-          self.class.audit_config[:owner].present? and
-          self.respond_to?(self.class.audit_config[:owner]) and
-          self.send(self.class.audit_config[:owner]) == user
-        
-          self.audit_logs.create({
-            user: user,
-            ip_address: ip,
-            action: action.to_s
-          })
-        end
-        
-        true
+      unless self.class.audit_config[:except].to_s == 'owner' and 
+        self.class.audit_config[:owner].present? and
+        self.respond_to?(self.class.audit_config[:owner]) and
+        self.send(self.class.audit_config[:owner]) == user
+      
+        self.audit_logs.create({
+          user: user,
+          ip_address: ip,
+          action: action.to_s
+        })
       end
+        
+      true
     end
 
     module ClassMethods
       def acts_as_auditable(options = {})
         @audit_config = options
-        has_many :audit_logs, as: :auditable, class_name: '::Audit::AuditLog'
-        after_create    {|record| record.audit(:create)}
-        after_update    {|record| record.audit(:update)}
-        after_find      {|record| record.audit(:find)}
-        before_destroy  {|record| record.audit(:destroy)}
+        unless Audit.auditables.include?(self.name)
+          has_many :audit_logs, as: :auditable, class_name: 'Audit::AuditLog'
+          
+          after_create    {|record| record.audit(:create)}
+          after_update    {|record| record.audit(:update)}
+          after_find      {|record| record.audit(:find)}
+          before_destroy  {|record| record.audit(:destroy)}
         
-        register_auditable(self)
-        include InstanceMethods
-        
+          register_auditable(self)
+        end
         true
       end
 
@@ -56,4 +53,4 @@ module Audit
   end
 end
 
-::ActiveRecord::Base.send(:include, ::Audit::ActiveRecord)
+ActiveRecord::Base.send(:include, Audit::ActsAsAuditable)
